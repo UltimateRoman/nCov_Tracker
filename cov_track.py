@@ -2,16 +2,18 @@ import requests, json, time
 import config as c
 
 
-response = requests.get(c.url)
-data = json.loads(response.text)
+response0 = requests.get(c.url)
+data0 = json.loads(response0.text)
 response1 = requests.get(c.url1)
 data1 = json.loads(response1.text)
+response2 = requests.get(c.url2)
+data2 = json.loads(response2.text)
 
 
 def globalrep():
-    cases = str(data['cases'])
-    recovered = str(data['recovered'])
-    deaths = str(data['deaths'])
+    cases = str(data0['cases'])
+    recovered = str(data0['recovered'])
+    deaths = str(data0['deaths'])
     active = str(int(cases) - int(recovered) - int(deaths))
     print("\nGenerating global report....")
     print("\nTotal cases: " + cases)
@@ -21,20 +23,52 @@ def globalrep():
 
 
 def countryrep():
-    country = input("Enter name of a country: ")
+    country = input("\nEnter name of a country: ")
     f = 0
     for a in data1:
         if country == str(a['country']):
             print("Generating report for " + country + "....")
-            print("\nTotal cases: " + str(a['cases']))
-            print("Cases reported today: " + str(a['todayCases']))
-            print("\nTotal deaths: " + str(a['deaths']))
-            print("Deaths reported today: " + str(a['todayDeaths']))
-            print("\nRecovered cases: " + str(a['recovered']))
-            print("Critical cases: " + str(a['critical']) + "\n")
+            cases = str(a['cases'])
+            deaths = str(a['deaths'])
+            active = str(a['active'])
+            recovered = str(a['recovered'])
+            critical = str(a['critical'])
+            ts = str(a['todayCases'])
+            td = str(a['todayDeaths'])
+            cpm = str(a['casesPerOneMillion'])
+            print("\nTotal cases: " + cases)
+            print("Total deaths: " + deaths)
+            print("\nActive cases: " + active)
+            print("Recovered cases: " + recovered)
+            print("Critical cases: " + critical + "\n")
+            print("\nCases reported today: " + ts)
+            print("Deaths reported today: " + td)
+            print("\nCases per million of population: " + cpm)
             f = 1
     if f != 1:
-        print("Sorry, country could not be found!")
+        print("Sorry, requested country could not be found!")
+
+
+def staterep():
+    d2a = data2['data']
+    d2b = d2a['regional']
+    print("\n*For Union Territories, please include 'Union Territory of' with name*")
+    state = input("\nEnter name of a state/UT: ")
+    f = 0
+    for a in d2b:
+        if state == str(a['loc']):
+            cci = str(a['confirmedCasesIndian'])
+            ccf = str(a['confirmedCasesForeign'])
+            discharged = str(a['discharged'])
+            deaths = str(a['deaths'])
+            print("\nConfirmed cases (Indians): " + cci)
+            print("Confirmed cases (Foreigners): " + ccf)
+            print("Discharged cases: " + discharged)
+            print("Deaths: " + deaths)
+            f = 1
+    if f != 1:
+        print("Sorry, requested state could not be found!")
+
 
 try:
     execute = True
@@ -43,14 +77,17 @@ try:
         print("\nOptions:")
         print("1.Global report")
         print("2.Country-specific report")
+        print("3.State-specific report for India")
         ch = input("\nEnter option: ")
         if ch == '1':
             globalrep()
         elif ch == '2':
             countryrep()
+        elif ch == '3':
+            staterep()
         else:
             print("\nInvalid option entered!")
-        con = input("Do u want to continue? ")
+        con = input("\nDo u want to continue?(y to continue): ")
         if con == 'y':
             execute = True
         else:
