@@ -5,8 +5,7 @@ import config as c
 try:
     response = requests.get(c.url)
     data = json.loads(response.text)
-    url1 = "https://corona.lmao.ninja/countries"
-    response1 = requests.get(url1)
+    response1 = requests.get(c.url1)
     data1 = json.loads(response1.text)
     cases = str(data['cases'])
     recovered = str(data['recovered'])
