@@ -1,9 +1,9 @@
 import requests, json, time
+import config as c
 
 
 try:
-    url = "https://corona.lmao.ninja/all"
-    response = requests.get(url)
+    response = requests.get(c.url)
     data = json.loads(response.text)
     url1 = "https://corona.lmao.ninja/countries"
     response1 = requests.get(url1)
